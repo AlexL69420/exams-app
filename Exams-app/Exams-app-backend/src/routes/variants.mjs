@@ -1,26 +1,27 @@
 import { Router } from "express";
 import pool from "../utils/data.mjs";
+import { isSuperuserorAuthor} from "../utils/middlewares.mjs";
 
 const router = Router();
 
-// Роут для удаления варианта по ID
-router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const result = await pool.query('SELECT "DeleteVariant"($1)', [parseInt(id)]);
-      const isDeleted = result.rows[0].delete_variant_by_id;
-  
+router.delete('/:id', isSuperuserorAuthor, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      // Вызываем функцию и получаем результат
+      const result = await pool.query('SELECT "DeleteVariant"($1) AS is_deleted', [parseInt(id)]);
+      const isDeleted = result.rows[0].is_deleted; // Используем псевдоним для результата
+
       if (isDeleted) {
-        res.status(200).json({ message: 'Variant deleted successfully' });
+          res.status(200).json({ message: 'Variant deleted successfully' });
       } else {
-        res.status(404).json({ error: 'Variant not found' });
+          res.status(404).json({ error: 'Variant not found' });
       }
-    } catch (err) {
+  } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Internal server error' });
-    }
-  });
+  }
+});
 
   // маршрут для получения всех вариантов
 router.get('/', async (req, res) => {
@@ -58,7 +59,7 @@ router.get('/recent', async (req, res) => {
     try {
         // Выполняем SQL-запрос для получения всех статей
         const { rows } = await pool.query('SELECT * FROM "GetLastFiveVariants"();');
-        console.log(rows);
+        //console.log(rows);
         
         // Отправляем данные в формате JSON
         res.json(rows);

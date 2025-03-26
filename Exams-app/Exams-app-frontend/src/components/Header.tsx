@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
 ("use client");
 
-import { Dropdown } from "flowbite-react";
-import { Button } from "flowbite-react";
-import { Avatar } from "flowbite-react";
-import { DarkThemeToggle } from "flowbite-react";
+import { Dropdown, DarkThemeToggle, Avatar } from "flowbite-react";
 
 import { VscAccount } from "react-icons/vsc";
 import { FaBook } from "react-icons/fa";
@@ -12,8 +9,7 @@ import { FaBook } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Header() {
-  const userName = "lavkh.22@uni-dubna.ru";
-  const isAuthenticated = useAuth();
+  const { user } = useAuth();
 
   return (
     <main className="flex h-16 w-full items-center justify-around bg-indigo-600 dark:bg-slate-800">
@@ -45,36 +41,80 @@ export default function Header() {
             </Link>
           </Dropdown>
 
+          <Dropdown label="Выбрать предмет" inline>
+            <Link to="/">
+              <Dropdown.Item>Информатика</Dropdown.Item>
+            </Link>
+            <Link to="/math">
+              <Dropdown.Item>Математика</Dropdown.Item>
+            </Link>
+            <Link to="/ruslang">
+              <Dropdown.Item>Русский Язык</Dropdown.Item>
+            </Link>
+            <Link to="/englang">
+              <Dropdown.Item>Английский Язык</Dropdown.Item>
+            </Link>
+          </Dropdown>
+
+          {/* 
           <Link to="/help">
             <h3 className="hover:underline">Помощь</h3>
           </Link>
           <Link to="/history">
             <h3 className="hover:underline">История</h3>
           </Link>
+          */}
+
+          {user && user.role === "superuser" ? (
+            <Link to="/adminpage">
+              {" "}
+              <h3 className="hover:underline">
+                Управление пользователями
+              </h3>{" "}
+            </Link>
+          ) : (
+            ""
+          )}
+          {user && (user.role === "superuser" || user.role === "author") ? (
+            <Link to="/constructor">
+              {" "}
+              <h3 className="hover:underline">Конструктор</h3>{" "}
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="flex w-1/6 flex-row items-center justify-around">
           <div className=" text-white dark:text-slate-300">
-            {isAuthenticated ? (
+            {!user ? (
               <Link to="/auth">
                 <h3 className="hover:underline">Вход</h3>
               </Link>
             ) : (
               <Link to="/profile">
-                <h1 className="text-white">{userName}</h1>
+                <h1 className="text-white">{user.username}</h1>
               </Link>
             )}
           </div>
 
           <div className="flex flex-row gap-4">
-            <Button
-              color="blue"
-              className="max-h-12 max-w-12 items-center rounded-full bg-blue-700 p-1 text-white dark:bg-slate-800 dark:text-slate-500 dark:hover:bg-slate-700"
-            >
-              <Link to="/profile">
-                <Avatar img={VscAccount} rounded />
-              </Link>
-            </Button>
+            <Link to="/profile">
+              {user?.usericon ? (
+                <img
+                  src={user.usericon}
+                  alt={user.username[0]} // Используем первую букву имени как альтернативный текст
+                  className="size-12 rounded-full object-cover"
+                />
+              ) : (
+                <Avatar
+                  img={VscAccount}
+                  className="size-12 rounded-full border-2 border-white text-white  hover:bg-blue-600  dark:border-slate-500 dark:text-slate-500 dark:hover:bg-slate-700"
+                  rounded
+                />
+              )}
+            </Link>
+
             <DarkThemeToggle className="flex size-12 items-center justify-around rounded-full border-2 border-white text-white  hover:bg-blue-600  dark:border-slate-500 dark:text-slate-500 dark:hover:bg-slate-700" />
           </div>
         </div>

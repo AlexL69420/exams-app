@@ -1,10 +1,11 @@
 import { Router } from "express";
 import pool from "../utils/data.mjs";
+import { isSuperuserorAuthor } from "../utils/middlewares.mjs";
 
 const router = Router();
 
 // Маршрут для создания задания
-router.post('/', async (req, res) => {
+router.post('/', isSuperuserorAuthor, async (req, res) => {
     const { description, problem, solution, answer } = req.body;
   
     try {

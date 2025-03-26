@@ -201,7 +201,9 @@ export default function Variant() {
                       className="text-gray-600 hover:cursor-pointer hover:underline dark:text-slate-300"
                       onClick={() => handleShowSolution(exercise.ExerciseId)}
                     >
-                      Показать решение
+                      {showSolution[exercise.ExerciseId]
+                        ? "Скрыть решение"
+                        : "Показать решение"}
                     </div>
                     {showSolution[exercise.ExerciseId] && (
                       <>

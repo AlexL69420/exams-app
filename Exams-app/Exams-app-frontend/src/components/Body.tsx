@@ -80,7 +80,7 @@ export default function Body() {
   // Отображение состояния загрузки
   if (loading) {
     return (
-      <div className="min-h-screen px-2 py-3 text-black dark:bg-slate-700 dark:text-white">
+      <div className="min-h-screen w-3/5 px-2 py-3 text-black dark:bg-slate-700 dark:text-white">
         Загрузка...
       </div>
     );
@@ -89,7 +89,7 @@ export default function Body() {
   // Отображение ошибки
   if (error) {
     return (
-      <div className="min-h-screen px-2 py-3 text-black dark:bg-slate-700 dark:text-white">
+      <div className="min-h-screen w-3/5 px-2 py-3 text-black dark:bg-slate-700 dark:text-white">
         {error}
       </div>
     );
